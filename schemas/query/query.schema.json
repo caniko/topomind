@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/caniko/topomind/schemas/query/query.schema.json",
+  "title": "Bounded Query AST",
+  "type": "object",
+  "required": ["revision", "from", "kind", "where", "select", "limit"],
+  "properties": {
+    "revision": {"type": "string"},
+    "from": {"type": ["string", "object"]},
+    "kind": {"type": "array", "items": {"type": "string"}},
+    "where": {"type": "object"},
+    "traverse": {"type": "array"},
+    "select": {"type": "array", "items": {"type": "string"}},
+    "order_by": {"type": "array"},
+    "limit": {"type": "integer", "minimum": 1, "maximum": 1000},
+    "continuation": {"type": ["string", "null"]},
+    "cost_budget": {"type": ["integer", "null"], "minimum": 1},
+    "tolerance": {"type": ["object", "null"]}
+  }
+}

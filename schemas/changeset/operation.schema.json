@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/caniko/topomind/schemas/changeset/operation.schema.json",
+  "title": "Typed ChangeSet Operation",
+  "type": "object",
+  "required": ["op"],
+  "properties": {
+    "op": {"enum": ["set_property", "set_expression", "sketch_set_datum", "create_primitive", "boolean", "set_visibility", "set_selection", "set_view", "create_object", "delete_object", "undo", "redo"]},
+    "target": {"type": "string"},
+    "constraint": {"type": "string"},
+    "property": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$"},
+    "expression": {"type": "string"},
+    "value": {},
+    "object": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$"},
+    "primitive": {"enum": ["box", "cylinder", "sphere"]},
+    "parameters": {"type": "object"},
+    "result": {"type": "string"},
+    "operation": {"type": "string"},
+    "left": {"type": "string"},
+    "right": {"type": "string"},
+    "visible": {"type": "boolean"},
+    "targets": {"type": "array", "items": {"type": "string"}},
+    "mode": {"enum": ["replace", "add", "remove"]},
+    "kind": {"type": "string"},
+    "require_no_dependents": {"type": "boolean"}
+  },
+  "additionalProperties": false
+}

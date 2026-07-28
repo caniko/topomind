@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/caniko/topomind/schemas/query/result.schema.json",
+  "title": "Bounded Query Result",
+  "type": "object",
+  "required": ["query_hash", "observed_revision", "complete", "matches", "omitted_counts", "cost"],
+  "properties": {
+    "query_hash": {"type": "string"},
+    "observed_revision": {"type": "string"},
+    "complete": {"type": "boolean"},
+    "matches": {"type": "array"},
+    "omitted_counts": {"type": "object"},
+    "continuation": {"type": ["string", "null"]},
+    "tolerances": {"type": "object"},
+    "cost": {"type": "object"}
+  }
+}

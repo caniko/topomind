@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/caniko/topomind/schemas/changeset/precondition.schema.json",
+  "title": "Typed ChangeSet Precondition",
+  "type": "object",
+  "required": ["kind"],
+  "properties": {
+    "kind": {"enum": ["property_equals", "entity_kind", "entity_exists", "revision_equals", "query_holds"]},
+    "target": {"type": "string"},
+    "property": {"type": "string"},
+    "expected_kind": {"type": "string"},
+    "identity": {"enum": ["exact", "mapped_exact", "mapped_heuristic", "ambiguous", "deleted", "stale", null]},
+    "value": {},
+    "revision": {"type": "string"},
+    "description": {"type": "string"},
+    "query_hash": {"type": "string"}
+  },
+  "additionalProperties": false
+}

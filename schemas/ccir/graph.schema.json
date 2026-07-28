@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/caniko/topomind/schemas/ccir/graph.schema.json",
+  "title": "CCIR Graph",
+  "type": "object",
+  "required": ["schema_version", "session", "document", "revision", "entities", "facts", "diagnostics", "metadata"],
+  "properties": {
+    "schema_version": {"const": "ccir/1.0"},
+    "session": {"type": "string"},
+    "document": {"type": "string"},
+    "revision": {"type": "object"},
+    "entities": {"type": "object"},
+    "facts": {"type": "array"},
+    "diagnostics": {"type": "array"},
+    "metadata": {"type": "object"}
+  }
+}

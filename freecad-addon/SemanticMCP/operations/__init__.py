@@ -1,0 +1,1 @@
+"""Typed, allowlisted FreeCAD operations."""

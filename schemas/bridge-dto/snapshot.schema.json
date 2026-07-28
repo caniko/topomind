@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/caniko/topomind/schemas/bridge-dto/snapshot.schema.json",
+  "title": "Bridge Snapshot",
+  "type": "object",
+  "required": ["schema_version", "session", "session_epoch", "document", "revision", "entities", "diagnostics"],
+  "properties": {
+    "schema_version": {"const": "bridge-dto/1.0"},
+    "session": {"type": "string"},
+    "session_epoch": {"type": "string"},
+    "document": {"type": "string"},
+    "document_label": {"type": ["string", "null"]},
+    "revision": {"type": "object", "required": ["geometry", "metadata", "focus", "view", "epoch"]},
+    "active_workbench": {"type": ["string", "null"]},
+    "gui_mode": {"type": "boolean"},
+    "active_object": {"type": ["string", "null"]},
+    "active_edit": {"type": ["string", "null"]},
+    "selection": {"type": "array"},
+    "view": {"type": ["object", "null"]},
+    "entities": {"type": "array"},
+    "diagnostics": {"type": "array"},
+    "metadata": {"type": "object"}
+  }
+}

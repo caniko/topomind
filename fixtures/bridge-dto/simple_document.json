@@ -1,0 +1,183 @@
+{
+  "schema_version": "bridge-dto/1.0",
+  "session": "fixture-session",
+  "session_epoch": "fixture-epoch",
+  "document": "simple-document",
+  "document_label": "Simple hole example",
+  "revision": {
+    "geometry": 0,
+    "metadata": 0,
+    "focus": 0,
+    "view": 0,
+    "epoch": "fixture-epoch"
+  },
+  "active_workbench": "PartDesignWorkbench",
+  "gui_mode": true,
+  "active_object": "fc://session/fixture-session/document/simple-document/object/Body/face/1@g0.m0.f0.v0.fixture-epoch",
+  "active_edit": null,
+  "selection": [
+    {
+      "ref": "fc://session/fixture-session/document/simple-document/object/Body/face/1@g0.m0.f0.v0.fixture-epoch",
+      "selection_index": 0,
+      "subelement": "Face1",
+      "source": "fixture"
+    }
+  ],
+  "view": {
+    "view_id": "fixture-session:simple-document:view",
+    "projection": "perspective",
+    "camera_position": {"x": 20.0, "y": 20.0, "z": 20.0},
+    "camera_orientation": {"x": 0.0, "y": 0.0, "z": 0.0, "w": 1.0},
+    "look_direction": {"x": -0.577350269, "y": -0.577350269, "z": -0.577350269},
+    "up_direction": {"x": 0.0, "y": 0.0, "z": 1.0},
+    "target": {"x": 5.0, "y": 5.0, "z": 5.0},
+    "field_of_view_deg": 45.0,
+    "orthographic_scale": null,
+    "clipping": [0.1, 1000.0],
+    "viewport": [1280, 720, 1],
+    "visible_objects": [
+      "fc://session/fixture-session/document/simple-document/object/Body@g0.m0.f0.v0.fixture-epoch",
+      "fc://session/fixture-session/document/simple-document/object/Pocket@g0.m0.f0.v0.fixture-epoch"
+    ],
+    "hidden_objects": [],
+    "section_planes": [],
+    "timestamp_ms": 1720000000000
+  },
+  "entities": [
+    {
+      "ref": "fc://session/fixture-session/document/simple-document/document@g0.m0.f0.v0.fixture-epoch",
+      "kind": "cad.document",
+      "name": "simple-document",
+      "label": "Simple hole example",
+      "frame": "world",
+      "units": {},
+      "source": {"object": null, "subelement": null, "extractor": "fixture/1.0", "kernel_tolerance": null, "fingerprint": "sha256:document"},
+      "identity": {"state": "exact", "confidence": 1.0, "signals": ["document_name"]},
+      "properties": {"recompute": "ok", "object_count": 3},
+      "links": [],
+      "bounds": null,
+      "shape": null
+    },
+    {
+      "ref": "fc://session/fixture-session/document/simple-document/object/Body@g0.m0.f0.v0.fixture-epoch",
+      "kind": "PartDesign::Body",
+      "name": "Body",
+      "label": "Body",
+      "frame": "world",
+      "units": {},
+      "source": {"object": "Body", "subelement": null, "extractor": "fixture/1.0", "kernel_tolerance": {"value": 0.01, "unit": "mm"}, "fingerprint": "sha256:body"},
+      "identity": {"state": "exact", "confidence": 1.0, "signals": ["freecad_internal_name"]},
+      "properties": {"type_id": "PartDesign::Body", "tip": "Pocket", "visible": true},
+      "links": [
+        {"relation": "contained_by", "target": "fc://session/fixture-session/document/simple-document/document@g0.m0.f0.v0.fixture-epoch"},
+        {"relation": "contains", "target": "fc://session/fixture-session/document/simple-document/object/Pocket@g0.m0.f0.v0.fixture-epoch"},
+        {"relation": "contains", "target": "fc://session/fixture-session/document/simple-document/object/HoleSketch@g0.m0.f0.v0.fixture-epoch"}
+      ],
+      "bounds": {"min": {"x": 0.0, "y": 0.0, "z": 0.0}, "max": {"x": 10.0, "y": 10.0, "z": 10.0}, "frame": "world"},
+      "shape": {"shape_type": "solid", "topology": {"faces": 7, "edges": 12, "solids": 1}, "geometry_type": null, "exact": true, "properties": {"valid": true, "volume": 990.0}}
+    },
+    {
+      "ref": "fc://session/fixture-session/document/simple-document/object/HoleSketch@g0.m0.f0.v0.fixture-epoch",
+      "kind": "Sketcher::SketchObject",
+      "name": "HoleSketch",
+      "label": "Hole sketch",
+      "frame": "sketch_local",
+      "units": {"length": "mm"},
+      "source": {"object": "HoleSketch", "subelement": null, "extractor": "fixture/sketcher/1.0", "kernel_tolerance": null, "fingerprint": "sha256:sketch"},
+      "identity": {"state": "exact", "confidence": 1.0, "signals": ["freecad_internal_name"]},
+      "properties": {"solver": "Fully constrained", "constraint_count": 1, "geometry_count": 1},
+      "links": [
+        {"relation": "contained_by", "target": "fc://session/fixture-session/document/simple-document/object/Body@g0.m0.f0.v0.fixture-epoch"},
+        {"relation": "depends_on", "target": "fc://session/fixture-session/document/simple-document/document@g0.m0.f0.v0.fixture-epoch"}
+      ],
+      "bounds": null,
+      "shape": null
+    },
+    {
+      "ref": "fc://session/fixture-session/document/simple-document/object/HoleSketch/constraint/0@g0.m0.f0.v0.fixture-epoch",
+      "kind": "sketch.constraint",
+      "name": "Constraint0",
+      "label": null,
+      "frame": "sketch_local",
+      "units": {"length": "mm"},
+      "source": {"object": "HoleSketch", "subelement": "Constraint0", "extractor": "fixture/sketcher/1.0", "kernel_tolerance": null, "fingerprint": "sha256:constraint"},
+      "identity": {"state": "exact", "confidence": 1.0, "signals": ["constraint_index_and_sketch"]},
+      "properties": {"constraint_index": 0, "constraint": {"type": "Diameter", "value": 6.0}, "datum": {"value": 6.0, "unit": "mm"}},
+      "links": [{"relation": "constrains", "target": "fc://session/fixture-session/document/simple-document/object/HoleSketch@g0.m0.f0.v0.fixture-epoch"}],
+      "bounds": null,
+      "shape": null
+    },
+    {
+      "ref": "fc://session/fixture-session/document/simple-document/object/Pocket@g0.m0.f0.v0.fixture-epoch",
+      "kind": "PartDesign::Feature",
+      "name": "Pocket",
+      "label": "Pocket",
+      "frame": "feature_local",
+      "units": {"length": "mm"},
+      "source": {"object": "Pocket", "subelement": null, "extractor": "fixture/partdesign/1.0", "kernel_tolerance": {"value": 0.01, "unit": "mm"}, "fingerprint": "sha256:pocket"},
+      "identity": {"state": "exact", "confidence": 1.0, "signals": ["freecad_internal_name"]},
+      "properties": {"type_id": "PartDesign::Feature", "controlling_properties": ["Length", "Diameter"], "Length": {"value": 10.0, "unit": "mm"}, "valid": true, "visible": true},
+      "links": [
+        {"relation": "contained_by", "target": "fc://session/fixture-session/document/simple-document/object/Body@g0.m0.f0.v0.fixture-epoch"},
+        {"relation": "generated_from", "target": "fc://session/fixture-session/document/simple-document/object/HoleSketch@g0.m0.f0.v0.fixture-epoch"},
+        {"relation": "depends_on", "target": "fc://session/fixture-session/document/simple-document/object/HoleSketch@g0.m0.f0.v0.fixture-epoch"}
+      ],
+      "bounds": {"min": {"x": 0.0, "y": 0.0, "z": 0.0}, "max": {"x": 10.0, "y": 10.0, "z": 10.0}, "frame": "world"},
+      "shape": {"shape_type": "solid", "topology": {"faces": 7, "edges": 12, "solids": 1}, "geometry_type": null, "exact": true, "properties": {"valid": true, "volume": 990.0}}
+    },
+    {
+      "ref": "fc://session/fixture-session/document/simple-document/object/Body/edge/1@g0.m0.f0.v0.fixture-epoch",
+      "kind": "cad.edge",
+      "name": "Edge1",
+      "label": null,
+      "frame": "world",
+      "units": {"length": "mm"},
+      "source": {"object": "Body", "subelement": "Edge1", "extractor": "fixture/part/1.0", "kernel_tolerance": {"value": 0.01, "unit": "mm"}, "fingerprint": "sha256:edge1"},
+      "identity": {"state": "exact", "confidence": 1.0, "signals": ["object_and_subelement"]},
+      "properties": {"length": 18.8495559, "curve_type": "Circle"},
+      "links": [],
+      "bounds": {"min": {"x": 2.0, "y": 2.0, "z": 0.0}, "max": {"x": 8.0, "y": 8.0, "z": 0.0}, "frame": "world"},
+      "shape": null
+    },
+    {
+      "ref": "fc://session/fixture-session/document/simple-document/object/Body/face/1@g0.m0.f0.v0.fixture-epoch",
+      "kind": "cad.face",
+      "name": "Face1",
+      "label": null,
+      "frame": "world",
+      "units": {"length": "mm", "area": "mm²"},
+      "source": {"object": "Body", "subelement": "Face1", "extractor": "fixture/part/1.0", "kernel_tolerance": {"value": 0.01, "unit": "mm"}, "fingerprint": "sha256:face1"},
+      "identity": {"state": "exact", "confidence": 1.0, "signals": ["object_and_subelement", "shape_fingerprint"]},
+      "properties": {"geometry": {"surface_type": "cylinder", "radius": 3.0, "axis": {"x": 0.0, "y": 0.0, "z": 1.0}, "origin": {"x": 5.0, "y": 5.0, "z": 0.0}, "depth": 10.0}, "semantic": {"orientation": "interior", "openings": 2.0}, "orientation": "Reversed", "area": 188.495559},
+      "links": [
+        {"relation": "generated_by", "target": "fc://session/fixture-session/document/simple-document/object/Pocket@g0.m0.f0.v0.fixture-epoch"},
+        {"relation": "bounded_by", "target": "fc://session/fixture-session/document/simple-document/object/Body/edge/1@g0.m0.f0.v0.fixture-epoch"}
+      ],
+      "bounds": {"min": {"x": 2.0, "y": 2.0, "z": 0.0}, "max": {"x": 8.0, "y": 8.0, "z": 10.0}, "frame": "world"},
+      "shape": {"shape_type": "face", "topology": {"edges": 1}, "geometry_type": "cylinder", "exact": true, "properties": {"surface_type": "cylinder", "radius": 3.0}}
+    },
+    {
+      "ref": "fc://session/fixture-session/document/simple-document/object/Body/face/2@g0.m0.f0.v0.fixture-epoch",
+      "kind": "cad.face",
+      "name": "Face2",
+      "label": null,
+      "frame": "world",
+      "units": {"area": "mm²"},
+      "source": {"object": "Body", "subelement": "Face2", "extractor": "fixture/part/1.0", "kernel_tolerance": {"value": 0.01, "unit": "mm"}, "fingerprint": "sha256:face2"},
+      "identity": {"state": "exact", "confidence": 1.0, "signals": ["object_and_subelement", "shape_fingerprint"]},
+      "properties": {"geometry": {"surface_type": "plane"}, "semantic": {"orientation": "exterior"}, "area": 100.0},
+      "links": [
+        {"relation": "generated_by", "target": "fc://session/fixture-session/document/simple-document/object/Pocket@g0.m0.f0.v0.fixture-epoch"},
+        {"relation": "bounded_by", "target": "fc://session/fixture-session/document/simple-document/object/Body/edge/1@g0.m0.f0.v0.fixture-epoch"}
+      ],
+      "bounds": {"min": {"x": 0.0, "y": 0.0, "z": 0.0}, "max": {"x": 10.0, "y": 10.0, "z": 0.0}, "frame": "world"},
+      "shape": {"shape_type": "face", "topology": {"edges": 1}, "geometry_type": "plane", "exact": true, "properties": {"surface_type": "plane"}}
+    }
+  ],
+  "diagnostics": [],
+  "metadata": {
+    "source": "version-controlled fixture",
+    "extractor": "fixture/1.0",
+    "display_unit_system": "Metric standard"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/caniko/topomind/schemas/ccir/entity.schema.json",
+  "title": "CCIR Entity",
+  "type": "object",
+  "required": ["ref", "kind", "schema_version", "revision", "identity", "properties", "links", "omissions"],
+  "properties": {
+    "ref": {"type": "string", "pattern": "^fc://"},
+    "kind": {"type": "string", "minLength": 1},
+    "schema_version": {"type": "string", "const": "ccir/1.0"},
+    "revision": {"type": "string", "minLength": 1},
+    "name": {"type": ["string", "null"]},
+    "label": {"type": ["string", "null"]},
+    "frame": {"type": ["string", "null"]},
+    "units": {"type": "object", "additionalProperties": {"type": "string"}},
+    "source": {"type": ["object", "null"]},
+    "identity": {"$ref": "identity.schema.json"},
+    "properties": {},
+    "links": {"type": "array", "items": {"$ref": "link.schema.json"}},
+    "omissions": {"type": "array", "items": {"$ref": "omission.schema.json"}},
+    "bounds": {"type": ["object", "null"]}
+  }
+}

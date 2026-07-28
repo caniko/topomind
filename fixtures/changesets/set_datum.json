@@ -1,0 +1,18 @@
+{
+  "schema_version": "changeset/1.0",
+  "request_id": "fixture-change-request",
+  "session": "fixture-session",
+  "document": "simple-document",
+  "base_revision": "g0.m0.f0.v0.fixture-epoch",
+  "description": "Increase the constrained hole diameter",
+  "preconditions": [
+    {"kind": "entity_kind", "target": "fc://session/fixture-session/document/simple-document/object/HoleSketch/constraint/0@g0.m0.f0.v0.fixture-epoch", "expected_kind": "sketch.constraint"},
+    {"kind": "property_equals", "target": "fc://session/fixture-session/document/simple-document/object/HoleSketch/constraint/0@g0.m0.f0.v0.fixture-epoch", "property": "datum", "value": {"value": 6.0, "unit": "mm"}}
+  ],
+  "operations": [
+    {"op": "sketch_set_datum", "constraint": "fc://session/fixture-session/document/simple-document/object/HoleSketch/constraint/0@g0.m0.f0.v0.fixture-epoch", "value": {"value": 6.5, "unit": "mm"}}
+  ],
+  "validate": ["recompute", "shape_validity", "sketch_solver"],
+  "idempotency_key": "fixture-change-idempotency",
+  "approval_token": null
+}

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/caniko/topomind/schemas/ccir/identity.schema.json",
+  "title": "CCIR Identity",
+  "type": "object",
+  "required": ["state", "confidence", "signals"],
+  "properties": {
+    "state": {"enum": ["exact", "mapped_exact", "mapped_heuristic", "ambiguous", "deleted", "stale"]},
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "signals": {"type": "array", "items": {"type": "string"}}
+  }
+}

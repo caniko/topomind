@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/caniko/topomind/schemas/bridge-dto/change-response.schema.json",
+  "title": "Bridge Change Response",
+  "type": "object",
+  "required": ["base_revision", "changeset_hash", "rolled_back", "rollback_fingerprint_verified", "validation"],
+  "properties": {
+    "base_revision": {"type": "string"},
+    "resulting_revision": {"type": ["string", "null"]},
+    "changeset_hash": {"type": "string"},
+    "preview_hash": {"type": ["string", "null"]},
+    "rolled_back": {"type": "boolean"},
+    "rollback_fingerprint_verified": {"type": "boolean"},
+    "diff": {},
+    "validation": {"type": "object"}
+  }
+}

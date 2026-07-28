@@ -1,0 +1,24 @@
+[package]
+name = "topomind"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[[bin]]
+name = "topomind"
+path = "src/main.rs"
+
+[dependencies]
+artifact-store.workspace = true
+ccir-core.workspace = true
+bridge-dto.workspace = true
+ipc-client.workspace = true
+mcp-adapter.workspace = true
+session-manager.workspace = true
+policy.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+uuid.workspace = true

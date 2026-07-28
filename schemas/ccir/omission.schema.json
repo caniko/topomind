@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/caniko/topomind/schemas/ccir/omission.schema.json",
+  "title": "CCIR Omission",
+  "type": "object",
+  "required": ["kind", "count", "reason"],
+  "properties": {"kind": {"type": "string"}, "count": {"type": "integer", "minimum": 1}, "reason": {"type": "string"}, "retrieve_with": {"type": ["string", "null"]}, "profile": {"type": ["string", "null"]}}
+}

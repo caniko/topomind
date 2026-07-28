@@ -1,0 +1,17 @@
+{
+  "revision": "g0.m0.f0.v0.fixture-epoch",
+  "from": "document",
+  "kind": ["cad.face"],
+  "where": {
+    "all": [
+      {"geometry.surface_type": {"eq": "cylinder"}},
+      {"geometry.radius": {"between_mm": [2.9, 3.1]}},
+      {"semantic.orientation": {"eq": "interior"}}
+    ]
+  },
+  "traverse": [{"relation": "adjacent_to", "max_depth": 1}],
+  "select": ["ref", "geometry.radius", "bounds"],
+  "order_by": [{"field": "ref", "direction": "asc"}],
+  "limit": 40,
+  "cost_budget": 10000
+}

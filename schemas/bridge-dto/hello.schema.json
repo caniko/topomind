@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/caniko/topomind/schemas/bridge-dto/hello.schema.json",
+  "title": "Bridge Hello",
+  "type": "object",
+  "required": ["message", "ipc_versions", "dto_versions", "freecad", "extractors", "operations", "limits", "capabilities"],
+  "properties": {
+    "message": {"const": "bridge.hello"},
+    "ipc_versions": {"type": "array", "items": {"type": "string"}},
+    "dto_versions": {"type": "array", "items": {"type": "string"}},
+    "freecad": {"type": "object"},
+    "extractors": {"type": "array"},
+    "operations": {"type": "array"},
+    "transaction_safety": {"type": "object"},
+    "limits": {"type": "object"},
+    "capabilities": {"type": "array"},
+    "compatibility": {"type": "string"}
+  }
+}

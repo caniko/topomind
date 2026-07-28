@@ -1,0 +1,35 @@
+{
+  "schema_version": "ccir/1.0",
+  "session": "fixture-session",
+  "document": "simple-document",
+  "revision": "g0.m0.f0.v0.fixture-epoch",
+  "required_entity_kinds": [
+    "cad.document",
+    "PartDesign::Body",
+    "PartDesign::Feature",
+    "Sketcher::SketchObject",
+    "sketch.constraint",
+    "cad.edge",
+    "cad.face"
+  ],
+  "required_facts": [
+    {
+      "kind": "semantic.hole",
+      "classification": "through",
+      "parameters": {
+        "radius_mm": 3.0,
+        "diameter_mm": 6.0,
+        "depth_mm": 10.0,
+        "openings": 2.0
+      },
+      "exactness": "mixed",
+      "confidence_category": "high",
+      "evidence_kind": "cad.face"
+    }
+  ],
+  "invariants": {
+    "missing_link_targets": 0,
+    "all_geometric_quantities_have_units": true,
+    "imported_feature_history_claimed": false
+  }
+}

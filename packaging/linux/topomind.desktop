@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Topomind FreeCAD Semantic Context
+Comment=Authenticated local bridge and MCP sidecar
+Exec=topomind
+Terminal=true
+Categories=Development;Engineering;

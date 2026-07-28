@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/caniko/topomind/schemas/changeset/preview.schema.json",
+  "title": "ChangeSet Preview",
+  "type": "object",
+  "required": ["base_revision", "preview_revision", "changeset_hash", "preview_hash", "rolled_back", "rollback_fingerprint_verified"],
+  "properties": {
+    "base_revision": {"type": "string"},
+    "preview_revision": {"type": "string"},
+    "changeset_hash": {"type": "string"},
+    "preview_hash": {"type": "string"},
+    "diff": {"type": "object"},
+    "validation": {"type": "object"},
+    "rolled_back": {"const": true},
+    "rollback_fingerprint_verified": {"const": true}
+  }
+}
