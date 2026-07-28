@@ -2,15 +2,34 @@
   description = "Topomind: semantic FreeCAD context and safe MCP editing";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    rs-harbor.url = "git+https://codeberg.org/caniko/rs-harbor.git?ref=trunk&rev=9bfa8bdb0ecb22d7bc11448665f7fbaebae7a759";
+
+    nixpkgs.follows = "rs-harbor/nixpkgs";
+    rust-overlay.follows = "rs-harbor/rust-overlay";
     flake-utils.url = "github:numtide/flake-utils";
-    crane.url = "github:ipetkov/crane";
   };
 
-  outputs = {self, nixpkgs, flake-utils, crane, ...}:
+  outputs = {self, nixpkgs, rs-harbor, rust-overlay, flake-utils, ...}:
     flake-utils.lib.eachDefaultSystem (system: let
-      pkgs = import nixpkgs {inherit system;};
-      craneLib = crane.mkLib pkgs;
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [(import rust-overlay)];
+      };
+      toolchain = rs-harbor.lib.mkToolchain {
+        inherit pkgs;
+        channel = "stable";
+        extensions = ["rustfmt"];
+        crossTargets = [];
+      };
+      inherit (toolchain) craneLib;
+      cross = rs-harbor.lib.mkCross {
+        inherit pkgs system;
+        enableOsxcross = false;
+      };
+      cargoConfig = rs-harbor.lib.mkCargoConfig {
+        inherit pkgs;
+        channel = "stable";
+      };
       src = pkgs.lib.cleanSourceWith {
         src = ./.;
         filter = path: type:
@@ -88,19 +107,18 @@
         meta.description = "Package the Topomind FreeCAD addon";
       };
 
-      devShells.default = pkgs.mkShell {
+      devShells.default = rs-harbor.lib.mkDevShell {
+        inherit pkgs cross cargoConfig;
+        inherit (toolchain) craneLib;
+        enableWindowsEnv = false;
+        enableOsxcrossEnv = false;
+        checks = self.checks.${system};
         packages = with pkgs; [
-          cargo
-          clippy
-          gcc
           git
           jq
-          pkg-config
           python3
-          rust-analyzer
-          rustfmt
         ];
-        shellHook = ''
+        extraShellHook = ''
           export TOPOMIND_SCHEMA_ROOT="${toString ./.}/schemas"
           export TOPOMIND_FIXTURE_ROOT="${toString ./.}/fixtures"
         '';
