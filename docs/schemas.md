@@ -4,17 +4,17 @@ Canonical contracts live under `schemas/` and use additive `1.0` evolution.
 The generated manifest records each schema's stable ID and SHA-256. Run:
 
 ```sh
-python scripts/validate_schemas.py
+cargo run -p topomind -- --validate-schemas
 ```
 
-The same command refreshes `schemas/generated/manifest.json` and the addon
-schema manifest. It intentionally validates contract ownership and required
+The same command refreshes `schemas/generated/manifest.json`. It intentionally
+validates contract ownership and required
 top-level fields without pretending to be a full JSON Schema evaluator.
 
 The important boundaries are:
 
 * `bridge-dto/1.0` — snapshots, hello, selection/view state, and change
-  responses crossing the Python/Rust boundary.
+  responses crossing the FreeCAD extension/sidecar boundary.
 * `ccir/1.0` — normalized entities, links, identity, diagnostics, omissions,
   and semantic facts.
 * `changeset/1.0` — revision-bound preconditions and typed operations.

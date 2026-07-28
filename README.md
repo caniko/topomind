@@ -1,9 +1,9 @@
 # Topomind
 
-Topomind is a local FreeCAD Semantic Context MCP server. It keeps FreeCAD
-integration small and Python-native while putting CCIR normalization,
-revisioning, bounded queries, measurements, policy, audit, artifacts, and MCP
-JSON-RPC in a Rust sidecar.
+Topomind is a local FreeCAD Semantic Context MCP server. Its FreeCAD workbench,
+extractors, observers, typed executor, authenticated bridge, and sidecar are
+Rust. FreeCAD's required `Init.py`/`InitGui.py` files only load the native
+extension.
 
 The default policy is `never_write`. Model changes are typed ChangeSets and
 must pass revision, identity, precondition, preview-fingerprint, validation,
@@ -12,7 +12,9 @@ cannot select capabilities, paths, endpoints, or approvals.
 
 ## Repository layout
 
-* `freecad-addon/SemanticMCP` — FreeCAD main-thread extractor, observer layer,
+* `freecad-addon/SemanticMCP` — the FreeCAD loader and packaged native
+  extension.
+* `freecad-extension` — PyO3 workbench, main-thread extractor, observer layer,
   authenticated bridge, typed operations, and explicit workbench commands.
 * `sidecar/crates` — CCIR, bridge DTOs, compiler, geometry, query, revisions,
   policy, artifacts, IPC, sessions, MCP adapter, and the `topomind` binary.
@@ -28,8 +30,8 @@ nix develop
 cargo test --workspace
 cargo clippy --workspace --all-targets -- -D warnings
 cargo fmt --all -- --check
-python scripts/validate_schemas.py
-python -m unittest discover -s tests -p 'test_*.py'
+cargo run -p topomind -- --validate-schemas --check --root .
+cargo build -p topomind-freecad-extension
 ```
 
 Run the fixture MCP server:
@@ -46,8 +48,9 @@ when imported. The sidecar discovers those records automatically, or accepts
 Build the FreeCAD addon archive:
 
 ```sh
-python scripts/package_addon.py --output dist/topomind-freecad-addon.zip
+cargo run -p topomind -- --package-addon --native target/release/libSemanticMCP_native.so --output dist/topomind-freecad-addon.zip
 ```
 
-FreeCAD 1.1.3+ is the write-support baseline. Older versions may be read-only
-when the bridge can extract safely; the bridge advertises that state explicitly.
+The bridge probes the running FreeCAD APIs and advertises capabilities at
+runtime. Unsupported APIs fail closed as typed read-only or unavailable
+operations rather than relying on a guessed version threshold.

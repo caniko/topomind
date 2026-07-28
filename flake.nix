@@ -30,35 +30,37 @@
         inherit cargoArtifacts;
         cargoExtraArgs = "-p topomind";
       });
+      extension = craneLib.buildPackage (commonArgs // {
+        inherit cargoArtifacts;
+        pname = "topomind-freecad-extension";
+        cargoExtraArgs = "-p topomind-freecad-extension";
+        nativeBuildInputs = [pkgs.pkg-config pkgs.python3];
+        installPhase = ''
+          mkdir -p $out/lib
+          native=$(find target/release -maxdepth 1 -type f \( -name 'libSemanticMCP_native.so' -o -name 'libSemanticMCP_native.dylib' -o -name 'SemanticMCP_native.dll' \) -print -quit)
+          test -n "$native"
+          cp "$native" $out/lib/SemanticMCP_native.so
+        '';
+      });
       cargoTest = craneLib.cargoTest (commonArgs // {
         inherit cargoArtifacts;
       });
       schemaCheck = pkgs.runCommand "topomind-schema-check" {
-        nativeBuildInputs = [pkgs.python3];
+        nativeBuildInputs = [package];
       } ''
         cp -r ${./schemas} schemas
-        cp -r ${./scripts} scripts
-        cp -r ${./freecad-addon} freecad-addon
-        chmod -R u+w schemas freecad-addon
-        python scripts/validate_schemas.py
-        touch $out
-      '';
-      pythonCheck = pkgs.runCommand "topomind-python-check" {
-        nativeBuildInputs = [pkgs.python3];
-      } ''
-        cp -r ${./tests} tests
-        cp -r ${./freecad-addon} freecad-addon
-        python -m unittest discover -s tests -p 'test_*.py'
+        ${package}/bin/topomind --validate-schemas --check --root .
         touch $out
       '';
       addon = pkgs.runCommand "topomind-freecad-addon" {
-        nativeBuildInputs = [pkgs.python3];
+        nativeBuildInputs = [package];
       } ''
         mkdir -p $out
-        python ${./scripts/package_addon.py} --source ${./freecad-addon}/SemanticMCP --output $out/topomind-freecad-addon.zip
+        ${package}/bin/topomind --package-addon --source ${./freecad-addon}/SemanticMCP --native ${extension}/lib/SemanticMCP_native.so --output $out/topomind-freecad-addon.zip
       '';
     in {
       packages.default = package;
+      packages.extension = extension;
       packages.addon = addon;
 
       checks = {
@@ -70,7 +72,7 @@
         });
         fmt = craneLib.cargoFmt {inherit src;};
         schemas = schemaCheck;
-        python = pythonCheck;
+        extension = extension;
       };
 
       apps.default = {
@@ -81,7 +83,7 @@
       apps.addon = {
         type = "app";
         program = "${pkgs.writeShellScript "topomind-package-addon" ''
-          exec ${pkgs.python3}/bin/python ${./scripts/package_addon.py} --source ${./freecad-addon}/SemanticMCP --output "''${1:-dist/topomind-freecad-addon.zip}"
+          exec ${package}/bin/topomind --package-addon --source ${./freecad-addon}/SemanticMCP --native ${extension}/lib/SemanticMCP_native.so --output "''${1:-dist/topomind-freecad-addon.zip}"
         ''}";
         meta.description = "Package the Topomind FreeCAD addon";
       };

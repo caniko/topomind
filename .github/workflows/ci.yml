@@ -21,9 +21,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-      - run: python scripts/validate_schemas.py
-      - run: python -m compileall -q freecad-addon/SemanticMCP
-      - run: python -m unittest discover -s tests -p 'test_*.py'
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo run -p topomind -- --validate-schemas --check --root .
+      - run: cargo build -p topomind-freecad-extension

@@ -1,5 +1,5 @@
 # Generated schema outputs
 
-`scripts/validate_schemas.py` validates every canonical schema and regenerates
-`manifest.json` plus the Python schema manifest. Generated outputs are checked
-in so the addon can report the contract without a generator toolchain.
+`topomind --validate-schemas` validates every canonical schema and regenerates
+`manifest.json`. The generated output is checked in so the repository can
+verify the contract without a Python generator toolchain.

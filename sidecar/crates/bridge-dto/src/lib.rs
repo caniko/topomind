@@ -3,9 +3,73 @@
 use ccir_core::{Bounds, Diagnostic, EntityRef, Identity, Link, Quantity, Revision, Value};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
+use std::io::{Read, Write};
+use thiserror::Error;
+
+use hmac::{Hmac, Mac};
+use sha2::Sha256;
 
 pub const IPC_VERSION: &str = "ipc/1.0";
 pub const DTO_VERSION: &str = "bridge-dto/1.0";
+pub const MAX_FRAME: usize = 4 * 1024 * 1024;
+
+type HmacSha256 = Hmac<Sha256>;
+
+#[derive(Debug, Error)]
+pub enum WireError {
+    #[error("wire I/O failed: {0}")]
+    Io(#[from] std::io::Error),
+    #[error("wire serialization failed: {0}")]
+    Serialization(#[from] serde_json::Error),
+    #[error("frame is too large: {0} bytes")]
+    FrameTooLarge(usize),
+    #[error("pairing proof is invalid")]
+    InvalidProof,
+}
+
+pub fn write_frame<T: Serialize>(stream: &mut impl Write, value: &T) -> Result<(), WireError> {
+    let bytes = serde_json::to_vec(value)?;
+    if bytes.len() > MAX_FRAME {
+        return Err(WireError::FrameTooLarge(bytes.len()));
+    }
+    stream.write_all(&(bytes.len() as u32).to_be_bytes())?;
+    stream.write_all(&bytes)?;
+    stream.flush()?;
+    Ok(())
+}
+
+pub fn read_frame<T: for<'de> Deserialize<'de>>(stream: &mut impl Read) -> Result<T, WireError> {
+    let mut length = [0_u8; 4];
+    stream.read_exact(&mut length)?;
+    let size = u32::from_be_bytes(length) as usize;
+    if size > MAX_FRAME {
+        return Err(WireError::FrameTooLarge(size));
+    }
+    let mut bytes = vec![0_u8; size];
+    stream.read_exact(&mut bytes)?;
+    Ok(serde_json::from_slice(&bytes)?)
+}
+
+pub fn pairing_proof(secret: &[u8], nonce: &str) -> Result<String, WireError> {
+    let mut mac = HmacSha256::new_from_slice(secret).map_err(|_| WireError::InvalidProof)?;
+    mac.update(nonce.as_bytes());
+    Ok(hex::encode(mac.finalize().into_bytes()))
+}
+
+pub fn verify_pairing(secret: &[u8], nonce: &str, proof: &str) -> bool {
+    let Ok(expected) = pairing_proof(secret, nonce) else {
+        return false;
+    };
+    expected.len() == proof.len()
+        && expected
+            .as_bytes()
+            .iter()
+            .zip(proof.as_bytes())
+            .fold(0_u8, |difference, (left, right)| {
+                difference | (left ^ right)
+            })
+            == 0
+}
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct IpcRequest {
@@ -211,6 +275,7 @@ pub struct SessionAdvertisement {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::io::Cursor;
 
     #[test]
     fn snapshot_round_trips() {
@@ -234,5 +299,25 @@ mod tests {
         let encoded = serde_json::to_string(&snapshot).unwrap();
         let decoded: BridgeSnapshot = serde_json::from_str(&encoded).unwrap();
         assert_eq!(decoded.session, "s");
+    }
+
+    #[test]
+    fn bounded_frames_and_pairing_are_shared() {
+        let mut bytes = Vec::new();
+        write_frame(&mut bytes, &serde_json::json!({"ok": true})).unwrap();
+        let decoded: Value = read_frame(&mut Cursor::new(bytes)).unwrap();
+        assert_eq!(decoded["ok"], true);
+        assert!(verify_pairing(
+            b"secret",
+            "nonce",
+            &pairing_proof(b"secret", "nonce").unwrap()
+        ));
+        assert!(!verify_pairing(b"secret", "nonce", "bad"));
+    }
+
+    #[test]
+    fn oversized_frames_fail_before_allocation() {
+        let error = write_frame(&mut Vec::new(), &"x".repeat(MAX_FRAME + 1)).unwrap_err();
+        assert!(matches!(error, WireError::FrameTooLarge(_)));
     }
 }

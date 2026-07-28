@@ -1,6 +1,6 @@
 # Safe operations
 
-The Rust ChangeSet model and Python executor share the operation vocabulary in
+The Rust ChangeSet model and native Rust FreeCAD executor share the operation vocabulary in
 `schemas/changeset/operation.schema.json`. Current operations cover declared
 properties and expressions, sketch datums, common primitives and booleans,
 visibility, selection, view actions, allowlisted object creation, dependent

@@ -9,8 +9,8 @@ MCP host --stdio/JSON-RPC--> Rust adapter
                               |-- private artifacts
                               `-- authenticated local IPC
                                       |
-                                FreeCAD Python addon
-                                (main-thread bridge)
+                                FreeCAD Rust extension
+                                (Python loader, main-thread bridge)
 ```
 
 The bridge copies FreeCAD state into versioned DTOs. The sidecar never retains
@@ -46,8 +46,8 @@ typed ChangeSet
   -> observed new revision + audit event
 ```
 
-The Python executor accepts only allowlisted operation names and declared
-FreeCAD properties. There is no standard arbitrary-Python MCP tool. Unknown
+The Rust executor accepts only allowlisted operation names and declared
+FreeCAD properties. There is no standard arbitrary-code MCP tool. Unknown
 objects remain readable but are not silently made write-eligible.
 
 ## Transport and lifecycle
@@ -58,7 +58,7 @@ ephemeral port is available as a fallback. Windows uses the same loopback
 fallback in this implementation, with the private rendezvous record and HMAC
 remaining mandatory. The bridge does not bind a fixed public port.
 
-FreeCAD callbacks are coalesced by event class. The bridge worker never walks
+FreeCAD callbacks are coalesced by event class. The Rust bridge worker never walks
 the document directly: it queues requests and schedules `process_pending` on
 the FreeCAD Qt main loop. If no scheduler is available, the call fails closed
 as `bridge_busy`.

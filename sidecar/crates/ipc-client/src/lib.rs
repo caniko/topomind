@@ -1,19 +1,14 @@
 //! Authenticated, length-prefixed local IPC for the FreeCAD bridge.
 
-use bridge_dto::{BridgeSnapshot, IPC_VERSION, IpcRequest, IpcResponse, ResponseStatus};
-use hmac::{Hmac, Mac};
+use bridge_dto::{BridgeSnapshot, IPC_VERSION, IpcRequest, IpcResponse, ResponseStatus, WireError};
 use serde::Serialize;
 use serde::de::DeserializeOwned;
 use serde_json::Value;
-use sha2::Sha256;
 use std::io::{Read, Write};
 use std::net::TcpStream;
 use std::path::Path;
 use thiserror::Error;
 use uuid::Uuid;
-
-type HmacSha256 = Hmac<Sha256>;
-const MAX_FRAME: usize = 4 * 1024 * 1024;
 
 #[derive(Debug, Error)]
 pub enum IpcError {
@@ -84,12 +79,13 @@ impl IpcClient {
 
     pub fn authenticate(&mut self) -> Result<IpcResponse, IpcError> {
         let nonce = Uuid::new_v4().to_string();
-        let mut mac =
-            HmacSha256::new_from_slice(&self.secret).map_err(|_| IpcError::Authentication)?;
-        mac.update(nonce.as_bytes());
         let response = self.request(
             "bridge.authenticate",
-            serde_json::json!({"nonce": nonce, "proof": hex::encode(mac.finalize().into_bytes())}),
+            serde_json::json!({
+                "nonce": nonce,
+                "proof": bridge_dto::pairing_proof(&self.secret, &nonce)
+                    .map_err(|_| IpcError::Authentication)?
+            }),
         )?;
         if response.status != ResponseStatus::Ok {
             return Err(IpcError::Authentication);
@@ -138,26 +134,22 @@ impl IpcClient {
 }
 
 pub fn write_frame<T: Serialize>(stream: &mut impl Write, value: &T) -> Result<(), IpcError> {
-    let bytes = serde_json::to_vec(value)?;
-    if bytes.len() > MAX_FRAME {
-        return Err(IpcError::FrameTooLarge(bytes.len()));
-    }
-    stream.write_all(&(bytes.len() as u32).to_be_bytes())?;
-    stream.write_all(&bytes)?;
-    stream.flush()?;
-    Ok(())
+    bridge_dto::write_frame(stream, value).map_err(Into::into)
 }
 
 pub fn read_frame<T: DeserializeOwned>(stream: &mut impl Read) -> Result<T, IpcError> {
-    let mut length = [0_u8; 4];
-    stream.read_exact(&mut length)?;
-    let size = u32::from_be_bytes(length) as usize;
-    if size > MAX_FRAME {
-        return Err(IpcError::FrameTooLarge(size));
+    bridge_dto::read_frame(stream).map_err(Into::into)
+}
+
+impl From<WireError> for IpcError {
+    fn from(error: WireError) -> Self {
+        match error {
+            WireError::Io(error) => Self::Io(error),
+            WireError::Serialization(error) => Self::Serialization(error),
+            WireError::FrameTooLarge(size) => Self::FrameTooLarge(size),
+            WireError::InvalidProof => Self::Authentication,
+        }
     }
-    let mut bytes = vec![0_u8; size];
-    stream.read_exact(&mut bytes)?;
-    Ok(serde_json::from_slice(&bytes)?)
 }
 
 fn decode_payload<T: DeserializeOwned>(response: IpcResponse) -> Result<T, IpcError> {
@@ -179,7 +171,7 @@ mod tests {
 
     #[test]
     fn oversized_frame_is_rejected_before_write() {
-        let result = write_frame(&mut Vec::new(), &"x".repeat(MAX_FRAME + 1));
+        let result = write_frame(&mut Vec::new(), &"x".repeat(bridge_dto::MAX_FRAME + 1));
         assert!(matches!(result, Err(IpcError::FrameTooLarge(_))));
     }
 }

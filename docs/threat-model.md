@@ -4,7 +4,8 @@
 
 * FreeCAD documents are untrusted input. Labels, expressions, annotations,
   imported metadata, and property strings are quoted data.
-* The Python addon has FreeCAD process authority and is therefore kept small.
+* The native Rust extension has FreeCAD process authority. The only Python
+  source is the loader required by FreeCAD's workbench discovery.
   It exposes no generic code-execution tool.
 * The sidecar is the policy and MCP authority. It writes only inside the
   private artifact root unless a separately granted capability is added.

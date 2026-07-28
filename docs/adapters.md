@@ -3,7 +3,7 @@
 The addon registry describes each workbench adapter with an object-type
 pattern, extractor version, transaction-safety declaration, operations, and
 validators. Adapters enrich the DTO; they do not grant capabilities and cannot
-execute arbitrary Python.
+execute arbitrary code.
 
 Core registrations cover document objects, Part/Part Design, and Sketcher.
 Unknown third-party objects are preserved through generic type IDs, declared
