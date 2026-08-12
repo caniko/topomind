@@ -26,16 +26,13 @@
         inherit pkgs system;
         enableOsxcross = false;
       };
-      cargoConfig = rs-harbor.lib.mkCargoConfig {
-        inherit pkgs;
-        toolchainProfile = "nightly";
-      };
-      src = pkgs.lib.cleanSourceWith {
-        src = ./.;
-        filter = path: type:
-          pkgs.lib.cleanSourceFilter path type
-          && !(type == "directory" && pkgs.lib.hasSuffix "/target" (toString path))
-          && !(type == "directory" && pkgs.lib.hasSuffix "/dist" (toString path));
+      cargoConfig = toolchain.cargoConfig;
+      src = pkgs.lib.fileset.toSource {
+        root = ./.;
+        fileset = pkgs.lib.fileset.unions [
+          (craneLib.fileset.commonCargoSources ./.)
+          ./fixtures
+        ];
       };
       commonArgs = {
         inherit src;
