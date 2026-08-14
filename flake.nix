@@ -2,7 +2,7 @@
   description = "Topomind: semantic FreeCAD context and safe MCP editing";
 
   inputs = {
-    rs-harbor.url = "git+https://codeberg.org/caniko/rs-harbor.git?ref=trunk&rev=c26b735eede8078f795651c4a9cbf0be8733b221";
+    rs-harbor.url = "git+ssh://git@codeberg.org/caniko/rs-harbor.git?ref=trunk&rev=f209ddbca3fdbb0dc31fa3886ccc2ff7369c18ac";
 
     nixpkgs.follows = "rs-harbor/nixpkgs";
     rust-overlay.follows = "rs-harbor/rust-overlay";
@@ -26,16 +26,13 @@
         inherit pkgs system;
         enableOsxcross = false;
       };
-      cargoConfig = rs-harbor.lib.mkCargoConfig {
-        inherit pkgs;
-        toolchainProfile = "nightly";
-      };
-      src = pkgs.lib.cleanSourceWith {
-        src = ./.;
-        filter = path: type:
-          pkgs.lib.cleanSourceFilter path type
-          && !(type == "directory" && pkgs.lib.hasSuffix "/target" (toString path))
-          && !(type == "directory" && pkgs.lib.hasSuffix "/dist" (toString path));
+      cargoConfig = toolchain.cargoConfig;
+      src = pkgs.lib.fileset.toSource {
+        root = ./.;
+        fileset = pkgs.lib.fileset.unions [
+          (craneLib.fileset.commonCargoSources ./.)
+          ./fixtures
+        ];
       };
       commonArgs = {
         inherit src;
