@@ -4,9 +4,9 @@ Topomind is a local FreeCAD Semantic Context MCP server. It lets an agent read
 and, under policy, change a FreeCAD document through typed operations instead
 of screen scraping or arbitrary Python. The FreeCAD workbench, extractors,
 observers, executor, authenticated bridge and sidecar are Rust; the only Python
-is the `Init.py`/`InitGui.py` loader FreeCAD requires. It speaks MCP JSON-RPC
-over stdio and discovers a running FreeCAD addon through a private rendezvous
-record.
+is the `__init__.py`/`Init.py`/`InitGui.py` loader package FreeCAD requires. It
+speaks MCP JSON-RPC over stdio and discovers a running FreeCAD addon through a
+private rendezvous record.
 
 ## Problem
 
@@ -77,9 +77,9 @@ or corrupts the file.
 
 ## Direction
 
-The current commit history is build work (harbor inputs, toolchain profiles,
-FreeCAD bridge port), following the two feature commits that implemented the
-semantic-context MCP and ported the bridge to Rust. The architecture docs define
+The current commit history is build work (harbor inputs, toolchain profiles),
+following the two feature commits that implemented the semantic-context MCP and
+ported the bridge to Rust. The architecture docs define
 the read and write paths and the adapter contract; adding an adapter requires a
 fixture, golden assertions, declared operations and validators, and preview,
 rollback, commit, stale-reference, validation, undo and idempotency tests before
