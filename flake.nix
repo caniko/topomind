@@ -2,7 +2,7 @@
   description = "Topomind: semantic FreeCAD context and safe MCP editing";
 
   inputs = {
-    rs-harbor.url = "git+ssh://git@github.com/caniko/rs-harbor.git?ref=trunk&rev=a2c6f8e0d0b3356a2528de381e6a095d150971fb";
+    rs-harbor.url = "git+ssh://git@github.com/caniko/rs-harbor.git?ref=trunk&rev=adbbcf515fe831f9683a786410556d94372202eb";
 
     nixpkgs.follows = "rs-harbor/nixpkgs";
     rust-overlay.follows = "rs-harbor/rust-overlay";
